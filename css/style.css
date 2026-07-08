@@ -227,16 +227,18 @@ img {
   }
 }
 
-@media (max-width: 640px) {
-  .section-inner {
-    padding-left: 24px !important;
-    padding-right: 24px !important;
-    padding-top: 72px !important;
-    padding-bottom: 72px !important;
+@media (max-width: 768px) {
+  /* ---- Hero: shorter than 100vh so there's less empty space to
+     scroll past before reaching real content. The nav (and its
+     "Book your stay" CTA) sits at the top of this box regardless of
+     its height, so it's always visible without scrolling. ---- */
+  header {
+    height: auto !important;
+    min-height: 520px !important;
   }
 
   .site-nav {
-    padding: 18px 20px !important;
+    padding: 16px 18px !important;
   }
 
   .site-nav .nav-logo {
@@ -257,10 +259,25 @@ img {
     font-size: 10.5px !important;
     letter-spacing: .1em !important;
     white-space: nowrap;
+    min-height: 44px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
   }
 
   .lang-switch {
     gap: 5px !important;
+  }
+
+  /* Bigger invisible tap area for the small flag icons. Padding grows
+     the hit area; the matching negative margin cancels it back out
+     of the flex flow so the row itself doesn't get wider (that's what
+     kept the logo from wrapping to two lines) and the nav stays on
+     one line. */
+  .lang-flag {
+    display: inline-block !important;
+    padding: 15px 4px !important;
+    margin: -15px -4px !important;
   }
 
   .lang-flag svg {
@@ -269,24 +286,173 @@ img {
   }
 
   .hero-caption {
-    padding: 0 24px 44px !important;
+    padding: 0 20px 28px !important;
   }
 
   .hero-title {
-    font-size: clamp(42px, 13vw, 112px) !important;
+    font-size: clamp(38px, 12vw, 84px) !important;
+  }
+
+  /* ---- Quick stats: 4 items as a tight 2x2 grid instead of a tall
+     stack, with dividers rearranged for the 2x2 shape. ---- */
+  header + section > .section-inner {
+    padding: 0 20px !important;
+  }
+
+  header + section > .section-inner > div {
+    padding: 18px 6px !important;
+  }
+
+  header + section > .section-inner > div:nth-child(3),
+  header + section > .section-inner > div:nth-child(4) {
+    border-top: 1px solid rgba(46, 42, 36, .12) !important;
+  }
+
+  header + section > .section-inner > div:nth-child(3) {
+    border-left: none !important;
+  }
+
+  /* ---- About: the outer <section> (not .section-inner) carries the
+     real padding here, so it needs its own override; the inner grid
+     wrapper's padding is zeroed to avoid stacking on top of it. ---- */
+  #about {
+    padding: 48px 20px !important;
+  }
+
+  #about > .section-inner {
+    padding: 0 !important;
+  }
+
+  .about-grid {
+    gap: 28px !important;
+  }
+
+  /* The 900px breakpoint switches .about-photo-grid to a single
+     column, but the 3 images keep their inline grid-column:2 /
+     grid-row assignments meant for the 2-column desktop collage —
+     that leaves a phantom empty grid row and a sliver first column.
+     Force all 3 into column 1, one per row, so they actually stack. */
+  .about-photo-grid {
+    grid-template-columns: 1fr !important;
+    grid-template-rows: 200px 170px 170px !important;
+    gap: 10px !important;
+  }
+
+  .about-photo-grid img {
+    grid-column: 1 !important;
+  }
+
+  .about-photo-grid img:nth-child(1) {
+    grid-row: 1 !important;
+  }
+
+  .about-photo-grid img:nth-child(2) {
+    grid-row: 2 !important;
+  }
+
+  .about-photo-grid img:nth-child(3) {
+    grid-row: 3 !important;
+  }
+
+  /* ---- Gallery: tight 2-column grid of thumbnails, no big standalone
+     photo. Each thumbnail still opens the same lightbox at its own
+     index — only the on-page layout changes, nothing in main.js. ---- */
+  #gallery {
+    padding: 48px 20px 0 !important;
+  }
+
+  #gallery > .section-inner {
+    padding: 0 !important;
+    margin-bottom: 24px !important;
+  }
+
+  .gallery-main {
+    display: none !important;
+  }
+
+  .gallery-thumbs {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
+    overflow: visible !important;
+    margin: 0 !important;
+  }
+
+  .gallery-thumb {
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 1 / 1 !important;
+    opacity: 1 !important;
+  }
+
+  /* ---- Amenities: already a 2-column icon grid at this width; just
+     tighten the padding/gaps that made it feel spaced-out. ---- */
+  #gallery + section > .section-inner {
+    padding: 48px 20px !important;
+  }
+
+  #gallery + section > .section-inner > h2 {
+    margin-bottom: 32px !important;
   }
 
   .amenities-grid {
     grid-template-columns: repeat(2, 1fr) !important;
-    gap: 40px 20px !important;
+    gap: 28px 16px !important;
+  }
+
+  /* ---- Bedrooms: the outer <section> carries its own padding too. ---- */
+  #gallery + section + section {
+    padding: 48px 20px 0 !important;
+  }
+
+  #gallery + section + section > .section-inner {
+    padding: 0 !important;
+    margin-bottom: 24px !important;
+  }
+
+  .bedrooms-grid {
+    gap: 12px !important;
+  }
+
+  .bedrooms-grid img {
+    height: 260px !important;
+  }
+
+  /* ---- Location ---- */
+  #gallery + section + section + section > .section-inner {
+    padding: 48px 20px !important;
+  }
+
+  .location-grid {
+    gap: 28px !important;
+  }
+
+  .location-map-box {
+    height: 300px !important;
+  }
+
+  .location-info-card {
+    max-width: 260px !important;
+    padding: 16px 18px !important;
+  }
+
+  /* ---- Reviews ---- */
+  #gallery + section + section + section + section > .section-inner {
+    padding: 48px 20px !important;
+  }
+
+  #gallery + section + section + section + section > .section-inner > h2 {
+    margin-bottom: 32px !important;
   }
 
   .reviews-grid {
     grid-template-columns: 1fr !important;
+    gap: 24px !important;
   }
 
-  .contact-form-row {
-    grid-template-columns: 1fr !important;
+  /* ---- Booking CTA ---- */
+  #book > .section-inner {
+    padding: 40px 20px !important;
   }
 
   .booking-cta-row {
@@ -294,8 +460,31 @@ img {
     align-items: flex-start !important;
   }
 
-  .location-info-card {
-    max-width: 260px !important;
-    padding: 16px 18px !important;
+  .directions-link,
+  .booking-cta-btn {
+    min-height: 44px !important;
+  }
+
+  /* ---- Contact ---- */
+  #contact > .section-inner {
+    padding: 48px 20px !important;
+  }
+
+  .contact-grid {
+    gap: 28px !important;
+  }
+
+  .contact-form-row {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* ---- Footer: compact and centered instead of three spaced-out
+     stacked lines. ---- */
+  footer > .section-inner {
+    padding: 28px 20px !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    text-align: center !important;
+    gap: 6px !important;
   }
 }
