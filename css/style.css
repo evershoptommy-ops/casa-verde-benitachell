@@ -80,6 +80,128 @@ img {
 }
 
 /* =========================================================
+   PHOTO GALLERY
+   Masonry (CSS multi-column) grid on tablet/desktop; a native
+   scroll-snap swipeable carousel below 768px. Breakpoints follow
+   the gallery's own spec (320 / 768 / 1024 / 1440) rather than
+   the rest of the site's, since it was designed against those.
+   ========================================================= */
+
+.gallery-grid {
+  columns: 1;
+  column-gap: 16px;
+}
+
+.gallery-item {
+  display: block;
+  position: relative;
+  break-inside: avoid;
+  margin-bottom: 16px;
+  border-radius: 4px;
+  overflow: hidden;
+  cursor: zoom-in;
+  background: #e8e0d0;
+}
+
+.gallery-item img {
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: transform .5s ease;
+}
+
+.gallery-item::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(46, 42, 36, 0) 55%, rgba(46, 42, 36, .5) 100%);
+  opacity: 0;
+  transition: opacity .3s ease;
+}
+
+.gallery-zoom-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(.75);
+  opacity: 0;
+  transition: opacity .3s ease, transform .3s ease;
+  pointer-events: none;
+  filter: drop-shadow(0 1px 6px rgba(0, 0, 0, .5));
+}
+
+@media (hover: hover) {
+  .gallery-item:hover img {
+    transform: scale(1.06);
+  }
+
+  .gallery-item:hover::after,
+  .gallery-item:hover .gallery-zoom-icon {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+/* Tablet: 2-column masonry */
+@media (min-width: 768px) {
+  .gallery-grid {
+    columns: 2;
+    column-gap: 20px;
+  }
+
+  .gallery-item {
+    margin-bottom: 20px;
+  }
+}
+
+/* Desktop: 3-column masonry */
+@media (min-width: 1024px) {
+  .gallery-grid {
+    columns: 3;
+  }
+}
+
+/* Mobile (<768px): swipeable, snap-to-card carousel instead of a grid */
+@media (max-width: 767px) {
+  .gallery-grid {
+    display: flex;
+    columns: unset;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    gap: 14px;
+    margin: 0 -24px;
+    padding: 4px 24px 10px;
+  }
+
+  .gallery-item {
+    flex: 0 0 80%;
+    scroll-snap-align: center;
+    margin-bottom: 0;
+  }
+
+  .gallery-item img {
+    height: 340px;
+    object-fit: cover;
+  }
+}
+
+@media (max-width: 374px) {
+  .gallery-item {
+    flex-basis: 86%;
+  }
+
+  .gallery-item img {
+    height: 300px;
+  }
+}
+
+/* PhotoSwipe lightbox: match the site's brand colors instead of PhotoSwipe's defaults */
+.pswp {
+  --pswp-bg: #171512;
+}
+
+/* =========================================================
    RESPONSIVE / MOBILE OVERRIDES
    The original design has no media queries. Everything below
    only takes effect below the given breakpoints and never

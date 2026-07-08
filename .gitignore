@@ -15,3 +15,7 @@ Thumbs.db
 # Origineel Claude Design-exportbestand — alleen lokale backup/bron,
 # niet nodig voor de site en te groot om in git-geschiedenis te bewaren.
 Casa Verde Homepage.html
+
+# Ruwe brongalerij-foto's — verwerkt naar images/gallery/ (thumb + full,
+# WebP/JPG). Alleen lokale backup, niet nodig voor de site.
+foto`s/

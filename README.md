@@ -24,6 +24,9 @@ Vakantiewoning-website voor Casa Verde, een duplex-appartement in Benitachell (C
 ├── js/
 │   └── main.js           Footer-jaartal + Netlify Forms (AJAX met fallback) — gedeeld door alle 4 talen
 ├── images/               Alle foto's (uitgepakt uit de originele design-export), gedeeld door alle talen
+│   └── gallery/
+│       ├── thumb/         Kleine WebP/JPG-versies (max 640px) voor de gallery-grid
+│       └── full/          Volledige resolutie voor de lightbox
 ├── netlify.toml           Netlify build- en headers-configuratie
 ├── robots.txt
 ├── sitemap.xml
@@ -42,6 +45,7 @@ Het **ontwerp zelf is niet aangepast** — alle teksten, kleuren, lay-out, foto'
 - **SEO**: elke taalpagina heeft eigen title/description/keywords, Open Graph- en Twitter Card-tags, `og:locale` + `og:locale:alternate` (naar de andere 3 talen), canonical URL, `hreflang`-links naar alle taalversies (en/nl/de/es/x-default), en JSON-LD structured data (`LodgingBusiness`) met `inLanguage`.
 - **Responsive/mobiel**: de originele export had geen enkele media query (vaste grid-lay-outs zoals 2- en 3-koloms grids zouden op mobiel volledig fout weergeven). Er zijn `class`-hooks toegevoegd (zonder bestaande `style="..."` aan te passen) plus responsive CSS-overrides in `css/style.css`, zodat alles goed werkt vanaf ongeveer 320px breed.
 - **Meertaligheid (NL/DE/ES/EN)**: aparte statische pagina per taal (beter voor SEO dan een JavaScript-taalwisselaar — elke taal is apart indexeerbaar door Google). Een compacte vlaggen-schakelaar in de navigatiebalk (herbruikbare inline SVG-vlaggen, geen emoji — die renderen inconsistent op Windows) linkt tussen `/`, `/nl/`, `/de/` en `/es/`. Elk taalcontactformulier heeft een eigen Netlify Forms-naam (`contact-en`/`contact-nl`/`contact-de`/`contact-es`) zodat aanvragen per taal herkenbaar zijn in het Netlify-dashboard, en wijst naar zijn eigen vertaalde bedankpagina.
+- **Fotogalerij**: 27 foto's uit de map `foto`s/` (huis, kamers, resort, strand) verwerkt tot een galerij tussen "Over de woning" en "Voorzieningen", op elke taalpagina met eigen vertaalde alt-teksten. Pinterest-stijl masonry-grid (3 kolommen desktop, 2 op tablet ≥768px), een swipebare carousel op mobiel (<768px, native scroll-snap — geen JS nodig voor het swipen zelf), en een volledig-scherm lightbox (PhotoSwipe v5 via CDN) met pijltjesnavigatie en pinch-to-zoom. Elke foto heeft een kleine WebP-thumbnail (met JPG-fallback via `<picture>`) voor de grid en laadt pas de volledige resolutie zodra je 'm in de lightbox opent. Alle 27 originele foto's staan ook nog als backup in `foto`s/` (niet in git, zie `.gitignore`).
 - **README + Git/Netlify-ready structuur** (dit bestand, `.gitignore`, `netlify.toml`).
 
 ## Voor je live gaat: nog even nalopen

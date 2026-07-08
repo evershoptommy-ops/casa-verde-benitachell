@@ -12,6 +12,34 @@
     yearEl.textContent = String(new Date().getFullYear());
   }
 
+  // Photo gallery lightbox (PhotoSwipe v5, loaded from CDN only on pages
+  // that actually have a gallery). Pinned to an exact version so the site
+  // doesn't change behavior under us if a new PhotoSwipe major ships.
+  var galleryEl = document.getElementById("pswp-gallery");
+  if (galleryEl) {
+    import(
+      "https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.min.js"
+    )
+      .then(function (module) {
+        var PhotoSwipeLightbox = module.default;
+        var lightbox = new PhotoSwipeLightbox({
+          gallery: "#pswp-gallery",
+          children: "a",
+          pswpModule: function () {
+            return import(
+              "https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe.esm.min.js"
+            );
+          },
+        });
+        lightbox.init();
+      })
+      .catch(function (err) {
+        // Links still work as plain "open image in new tab" if the CDN
+        // fails to load, so this is a degraded experience, not a broken one.
+        console.error("Gallery lightbox failed to load:", err);
+      });
+  }
+
   // Netlify Forms: submit via fetch and show an inline confirmation
   // instead of a full page redirect. If fetch/JS isn't available,
   // the form's own action="/success.html" still works natively.
