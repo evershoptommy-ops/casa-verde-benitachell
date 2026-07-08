@@ -1,5 +1,8 @@
 User-agent: *
 Allow: /
 Disallow: /success.html
+Disallow: /nl/success.html
+Disallow: /de/success.html
+Disallow: /es/success.html
 
 Sitemap: https://casa-verde-benitachell.netlify.app/sitemap.xml

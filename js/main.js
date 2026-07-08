@@ -15,8 +15,18 @@
   // Netlify Forms: submit via fetch and show an inline confirmation
   // instead of a full page redirect. If fetch/JS isn't available,
   // the form's own action="/success.html" still works natively.
-  var form = document.querySelector('form[name="contact"]');
+  // Selector is class-based (not form[name=...]) because each language
+  // page uses its own form name (contact-en, contact-nl, contact-de,
+  // contact-es) so Netlify can tell submissions apart per language.
+  var form = document.querySelector(".contact-form");
   if (!form) return;
+
+  // Status text is read from data attributes so this one shared script
+  // can show the message in whichever language the page is in.
+  var msgSending = form.dataset.msgSending || "Sending your inquiry…";
+  var msgSuccess =
+    form.dataset.msgSuccess ||
+    "Thank you — your inquiry has been sent. We'll be in touch shortly.";
 
   var statusEl = form.querySelector(".contact-form-status");
   var submitBtn = form.querySelector(".contact-submit");
@@ -46,7 +56,7 @@
     });
 
     if (submitBtn) submitBtn.disabled = true;
-    setStatus("Sending your inquiry…", false);
+    setStatus(msgSending, false);
 
     fetch("/", {
       method: "POST",
@@ -56,10 +66,7 @@
       .then(function (response) {
         if (!response.ok) throw new Error("Network response was not ok");
         form.reset();
-        setStatus(
-          "Thank you — your inquiry has been sent. We'll be in touch shortly.",
-          false
-        );
+        setStatus(msgSuccess, false);
       })
       .catch(function () {
         // Fall back to a real form submission if the AJAX request fails

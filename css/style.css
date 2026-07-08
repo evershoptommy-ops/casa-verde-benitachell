@@ -55,6 +55,30 @@ img {
   cursor: not-allowed;
 }
 
+/* ---- Language switcher (flag icons in the nav) ---- */
+.lang-switch {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.lang-flag {
+  display: block;
+  line-height: 0;
+  border-radius: 2px;
+  opacity: .55;
+  transition: opacity .2s;
+}
+
+.lang-flag:hover {
+  opacity: .85;
+}
+
+.lang-flag--active {
+  opacity: 1;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, .8);
+}
+
 /* =========================================================
    RESPONSIVE / MOBILE OVERRIDES
    The original design has no media queries. Everything below
@@ -94,15 +118,36 @@ img {
   }
 
   .site-nav {
-    padding: 20px 24px !important;
+    padding: 18px 20px !important;
+  }
+
+  .site-nav .nav-logo {
+    font-size: 19px !important;
+    white-space: nowrap;
   }
 
   .site-nav .nav-links {
-    gap: 16px !important;
+    gap: 10px !important;
   }
 
   .site-nav .nav-link {
     display: none !important;
+  }
+
+  .site-nav .nav-cta {
+    padding: 9px 14px !important;
+    font-size: 10.5px !important;
+    letter-spacing: .1em !important;
+    white-space: nowrap;
+  }
+
+  .lang-switch {
+    gap: 5px !important;
+  }
+
+  .lang-flag svg {
+    width: 16px !important;
+    height: 11px !important;
   }
 
   .hero-caption {
