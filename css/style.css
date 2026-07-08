@@ -1,0 +1,138 @@
+/* Casa Verde — Benitachell, Costa Blanca
+   The design itself is implemented with inline styles in index.html
+   (as exported from the design tool) and is left untouched here.
+   This file only adds: global reset, real :hover states (the design
+   export used a non-standard `style-hover` attribute that browsers
+   ignore), the new contact form's look, and mobile-responsive
+   overrides for the grid layouts that had no mobile treatment. */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+::selection {
+  background: #BC6644;
+  color: #fff;
+}
+
+img {
+  max-width: 100%;
+}
+
+/* ---- Hover states (replacing the design tool's `style-hover` shorthand) ---- */
+.nav-cta:hover {
+  background: #fff;
+  color: #2E2A24;
+}
+
+.directions-link:hover,
+.booking-cta-btn:hover,
+.contact-submit:hover {
+  opacity: .88;
+}
+
+.contact-submit {
+  transition: opacity .25s;
+}
+
+/* ---- Contact form focus state ---- */
+.contact-form input:focus,
+.contact-form textarea:focus {
+  outline: none;
+  border-color: #5E6347 !important;
+}
+
+.contact-submit:disabled {
+  opacity: .6;
+  cursor: not-allowed;
+}
+
+/* =========================================================
+   RESPONSIVE / MOBILE OVERRIDES
+   The original design has no media queries. Everything below
+   only takes effect below the given breakpoints and never
+   changes the desktop appearance.
+   ========================================================= */
+
+@media (max-width: 900px) {
+  .about-grid,
+  .bedrooms-grid,
+  .location-grid,
+  .contact-grid {
+    grid-template-columns: 1fr !important;
+    gap: 40px !important;
+  }
+
+  .bedrooms-grid img {
+    height: 360px !important;
+  }
+
+  .location-map-box {
+    height: 380px !important;
+  }
+
+  .about-photo-grid {
+    grid-template-columns: 1fr !important;
+    grid-template-rows: 220px 200px 200px !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .section-inner {
+    padding-left: 24px !important;
+    padding-right: 24px !important;
+    padding-top: 72px !important;
+    padding-bottom: 72px !important;
+  }
+
+  .site-nav {
+    padding: 20px 24px !important;
+  }
+
+  .site-nav .nav-links {
+    gap: 16px !important;
+  }
+
+  .site-nav .nav-link {
+    display: none !important;
+  }
+
+  .hero-caption {
+    padding: 0 24px 44px !important;
+  }
+
+  .hero-title {
+    font-size: clamp(42px, 13vw, 112px) !important;
+  }
+
+  .amenities-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 40px 20px !important;
+  }
+
+  .reviews-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .contact-form-row {
+    grid-template-columns: 1fr !important;
+  }
+
+  .booking-cta-row {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+
+  .location-info-card {
+    max-width: 260px !important;
+    padding: 16px 18px !important;
+  }
+}

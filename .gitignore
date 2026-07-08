@@ -1,0 +1,17 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+
+# Netlify
+.netlify/
+
+# Logs
+*.log
+
+# Origineel Claude Design-exportbestand — alleen lokale backup/bron,
+# niet nodig voor de site en te groot om in git-geschiedenis te bewaren.
+Casa Verde Homepage.html
