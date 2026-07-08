@@ -12,106 +12,41 @@
     yearEl.textContent = String(new Date().getFullYear());
   }
 
-  // Photo gallery: a Booking.com/Airbnb-style slider — one large main
-  // image, a thumbnail strip to jump between photos, and prev/next
-  // arrows. Clicking the main image opens the full-screen PhotoSwipe
-  // lightbox (v5, loaded from CDN, pinned to an exact version) at the
-  // current photo, with pinch-to-zoom and swipe/arrow navigation.
+  // Photo gallery: a single static cover photo on the page — browsing
+  // through all 27 photos only happens inside the full-screen PhotoSwipe
+  // lightbox (v5, loaded from CDN, pinned to an exact version), which
+  // has its own arrow/swipe/pinch-zoom navigation. The page itself never
+  // scrolls or paginates; clicking the cover photo is the only entry
+  // point. The hidden buttons in #gallery-thumbs aren't shown (see
+  // css/style.css) — they just carry the data (data-full/-w/-h/-alt)
+  // used to build the lightbox's photo list.
   var galleryThumbs = document.getElementById("gallery-thumbs");
-  if (galleryThumbs) {
-    (function () {
-      var thumbs = Array.prototype.slice.call(
-        galleryThumbs.querySelectorAll(".gallery-thumb")
-      );
-      var mainBox = document.querySelector(".gallery-main");
-      var mainImg = document.getElementById("gallery-main-img");
-      var counterCurrent = document.getElementById("gallery-counter-current");
-      var prevBtn = document.querySelector(".gallery-arrow--prev");
-      var nextBtn = document.querySelector(".gallery-arrow--next");
-      var currentIndex = 0;
-
-      function setActive(index, skipScroll) {
-        currentIndex = (index + thumbs.length) % thumbs.length;
-        var thumb = thumbs[currentIndex];
-        mainImg.src = thumb.dataset.full;
-        mainImg.alt = thumb.dataset.alt;
-        mainImg.width = thumb.dataset.w;
-        mainImg.height = thumb.dataset.h;
-        if (counterCurrent) counterCurrent.textContent = String(currentIndex + 1);
-        thumbs.forEach(function (t, i) {
-          t.classList.toggle("gallery-thumb--active", i === currentIndex);
-        });
-        if (!skipScroll) {
-          thumb.scrollIntoView({
-            behavior: "smooth",
-            inline: "center",
-            block: "nearest",
-          });
-        }
-      }
-
-      thumbs.forEach(function (thumb, i) {
-        thumb.addEventListener("click", function () {
-          setActive(i);
-        });
-      });
-
-      if (prevBtn) {
-        prevBtn.addEventListener("click", function () {
-          setActive(currentIndex - 1);
-        });
-      }
-      if (nextBtn) {
-        nextBtn.addEventListener("click", function () {
-          setActive(currentIndex + 1);
-        });
-      }
-
-      // Touch swipe on the main image (left = next, right = previous).
-      var touchStartX = null;
-      mainBox.addEventListener(
-        "touchstart",
-        function (e) {
-          touchStartX = e.touches[0].clientX;
-        },
-        { passive: true }
-      );
-      mainBox.addEventListener("touchend", function (e) {
-        if (touchStartX === null) return;
-        var dx = e.changedTouches[0].clientX - touchStartX;
-        if (Math.abs(dx) > 40) {
-          setActive(currentIndex + (dx < 0 ? 1 : -1));
-        }
-        touchStartX = null;
-      });
-
-      // Click/tap the main image to open the full-screen lightbox at
-      // whichever photo is currently showing.
-      mainImg.addEventListener("click", function () {
-        var dataSource = thumbs.map(function (t) {
+  var mainImg = document.getElementById("gallery-main-img");
+  if (galleryThumbs && mainImg) {
+    mainImg.addEventListener("click", function () {
+      var dataSource = Array.prototype.map.call(
+        galleryThumbs.querySelectorAll(".gallery-thumb"),
+        function (t) {
           return {
             src: t.dataset.full,
             width: parseInt(t.dataset.w, 10),
             height: parseInt(t.dataset.h, 10),
             alt: t.dataset.alt,
           };
+        }
+      );
+      import("https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe.esm.min.js")
+        .then(function (module) {
+          var PhotoSwipe = module.default;
+          var pswp = new PhotoSwipe({ dataSource: dataSource, index: 0 });
+          pswp.init();
+        })
+        .catch(function (err) {
+          // Degraded but not broken: the cover photo is still visible
+          // without the lightbox if the CDN fails to load.
+          console.error("Gallery lightbox failed to load:", err);
         });
-        import("https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe.esm.min.js")
-          .then(function (module) {
-            var PhotoSwipe = module.default;
-            var pswp = new PhotoSwipe({
-              dataSource: dataSource,
-              index: currentIndex,
-            });
-            pswp.init();
-          })
-          .catch(function (err) {
-            // Degraded but not broken: the slider itself still works
-            // without the lightbox if the CDN fails to load.
-            console.error("Gallery lightbox failed to load:", err);
-          });
-      });
-    })();
+    });
   }
 
   // Netlify Forms: submit via fetch and show an inline confirmation
