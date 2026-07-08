@@ -12,40 +12,47 @@
     yearEl.textContent = String(new Date().getFullYear());
   }
 
-  // Photo gallery: a single static cover photo on the page — browsing
-  // through all 27 photos only happens inside the full-screen PhotoSwipe
-  // lightbox (v5, loaded from CDN, pinned to an exact version), which
-  // has its own arrow/swipe/pinch-zoom navigation. The page itself never
-  // scrolls or paginates; clicking the cover photo is the only entry
-  // point. The hidden buttons in #gallery-thumbs aren't shown (see
-  // css/style.css) — they just carry the data (data-full/-w/-h/-alt)
-  // used to build the lightbox's photo list.
+  // Photo gallery: a cover photo plus a visible thumbnail strip on the
+  // page. Browsing through all 27 photos only happens inside the
+  // full-screen PhotoSwipe lightbox (v5, loaded from CDN, pinned to an
+  // exact version) — clicking the cover photo or any thumbnail opens
+  // the lightbox at that photo; nothing changes inline on the page.
   var galleryThumbs = document.getElementById("gallery-thumbs");
   var mainImg = document.getElementById("gallery-main-img");
   if (galleryThumbs && mainImg) {
-    mainImg.addEventListener("click", function () {
-      var dataSource = Array.prototype.map.call(
-        galleryThumbs.querySelectorAll(".gallery-thumb"),
-        function (t) {
-          return {
-            src: t.dataset.full,
-            width: parseInt(t.dataset.w, 10),
-            height: parseInt(t.dataset.h, 10),
-            alt: t.dataset.alt,
-          };
-        }
-      );
+    var thumbs = Array.prototype.slice.call(
+      galleryThumbs.querySelectorAll(".gallery-thumb")
+    );
+    var dataSource = thumbs.map(function (t) {
+      return {
+        src: t.dataset.full,
+        width: parseInt(t.dataset.w, 10),
+        height: parseInt(t.dataset.h, 10),
+        alt: t.dataset.alt,
+      };
+    });
+
+    function openLightbox(index) {
       import("https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe.esm.min.js")
         .then(function (module) {
           var PhotoSwipe = module.default;
-          var pswp = new PhotoSwipe({ dataSource: dataSource, index: 0 });
+          var pswp = new PhotoSwipe({ dataSource: dataSource, index: index });
           pswp.init();
         })
         .catch(function (err) {
-          // Degraded but not broken: the cover photo is still visible
-          // without the lightbox if the CDN fails to load.
+          // Degraded but not broken: the cover photo/thumbnails are
+          // still visible without the lightbox if the CDN fails to load.
           console.error("Gallery lightbox failed to load:", err);
         });
+    }
+
+    mainImg.addEventListener("click", function () {
+      openLightbox(0);
+    });
+    thumbs.forEach(function (thumb, i) {
+      thumb.addEventListener("click", function () {
+        openLightbox(i);
+      });
     });
   }
 
